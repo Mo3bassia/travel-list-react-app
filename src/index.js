@@ -10,7 +10,7 @@ function App() {
       <Logo />
       <Form list={list} setList={setList} />
       <PackingList list={list} setList={setList} />
-      <Stats />
+      <Stats list={list} />
     </div>
   );
 }
@@ -87,13 +87,18 @@ function Item({ item, list, setList }) {
   function handleDelete() {
     setList(list.filter((i) => i.id !== item.id));
   }
+
+  function handleChange(e) {
+    setIsEnd(e.target.checked);
+    setList(
+      list.map((li) => {
+        return li.id === item.id ? { ...li, packed: !item.packed } : { ...li };
+      })
+    );
+  }
   return (
     <li>
-      <input
-        type="checkbox"
-        checked={isEnd}
-        onChange={(e) => setIsEnd(e.target.checked)}
-      ></input>
+      <input type="checkbox" checked={isEnd} onChange={handleChange}></input>
       <span style={isEnd ? { textDecoration: "line-through" } : null}>
         {item.quantity} {item.description}
       </span>
@@ -102,10 +107,31 @@ function Item({ item, list, setList }) {
   );
 }
 
-function Stats() {
+function Stats({ list }) {
+  const length = list.length;
+  const numbersPacked = list.filter((item) => item.packed).length;
+
+  const percentPacked =
+    length !== 0 &&
+    Number((list.filter((item) => item.packed).length / length) * 100).toFixed(
+      0
+    );
+  if (length == 0)
+    return (
+      <footer className="stats">
+        <em>Start Adding Some items to your packing list 🚀</em>
+      </footer>
+    );
   return (
     <footer className="stats">
-      <em>You have X items on your list, and you already packed X%</em>
+      {percentPacked != 100 ? (
+        <em>
+          You have {length} items on your list, and you already packed{" "}
+          {numbersPacked} ({percentPacked})%
+        </em>
+      ) : (
+        <em>You got everything! Ready to go ✈️</em>
+      )}
     </footer>
   );
 }
