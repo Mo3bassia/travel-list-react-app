@@ -33,6 +33,7 @@ function Form({ list, setList }) {
 
   function handleSubmit(e) {
     e.preventDefault();
+    if (!description) return;
     setList(
       list.concat({
         id: list.length + 1,
@@ -41,12 +42,14 @@ function Form({ list, setList }) {
         packed: false,
       })
     );
+    setDescription("");
+    setQuantity(1);
   }
 
   return (
     <form className="add-form" onSubmit={handleSubmit}>
       <h3>What do you need for your 😍 trip?</h3>
-      <select value={quantity} onChange={(e) => setQuantity(e.target.value)}>
+      <select value={quantity} onChange={(e) => setQuantity(+e.target.value)}>
         {[...Array(20).keys()].map((option) => (
           <option value={option + 1} key={`option-${option + 1}`}>
             {option + 1}
