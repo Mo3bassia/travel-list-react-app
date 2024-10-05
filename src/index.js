@@ -2,16 +2,8 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 
-// const initialItems = [
-//   { id: 1, description: "Passports", quantity: 2, packed: false },
-//   { id: 2, description: "Socks", quantity: 12, packed: false },
-// ];
-
 function App() {
-  const [list, setList] = useState([
-    { id: 1, description: "Passports", quantity: 2, packed: false },
-    { id: 2, description: "Socks", quantity: 12, packed: false },
-  ]);
+  const [list, setList] = useState([]);
 
   return (
     <div className="app">
@@ -34,14 +26,15 @@ function Form({ list, setList }) {
   function handleSubmit(e) {
     e.preventDefault();
     if (!description) return;
-    setList(
-      list.concat({
+    setList([
+      ...list,
+      {
         id: list.length + 1,
         description: description,
         quantity: quantity,
         packed: false,
-      })
-    );
+      },
+    ]);
     setDescription("");
     setQuantity(1);
   }
@@ -69,8 +62,8 @@ function Form({ list, setList }) {
 
 function PackingList({ list, setList }) {
   return (
-    list.length > 0 && (
-      <div className="list">
+    <div className="list">
+      {list.length > 0 && (
         <ul>
           {list.map((item) => (
             <Item
@@ -81,13 +74,15 @@ function PackingList({ list, setList }) {
             />
           ))}
         </ul>
-      </div>
-    )
+      )}
+    </div>
   );
 }
 
 function Item({ item, list, setList }) {
   const [isEnd, setIsEnd] = useState(item.packed);
+
+  item.packed = isEnd;
 
   function handleDelete() {
     setList(list.filter((i) => i.id !== item.id));
