@@ -3,7 +3,32 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 
 function App() {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState([
+    {
+      description: "zarif",
+      packed: false,
+      id: 1,
+      quantity: 5,
+    },
+    {
+      description: "mohamed",
+      packed: false,
+      id: 2,
+      quantity: 5,
+    },
+    {
+      description: "ahmed",
+      packed: true,
+      id: 3,
+      quantity: 5,
+    },
+    {
+      description: "samy",
+      packed: false,
+      id: 4,
+      quantity: 5,
+    },
+  ]);
 
   return (
     <div className="app">
@@ -61,11 +86,23 @@ function Form({ list, setList }) {
 }
 
 function PackingList({ list, setList }) {
+  const [selected, setSelected] = useState("input");
+
+  let sortedList;
+
+  if (selected === "input")
+    sortedList = list.slice().sort((a, b) => a.id - b.id);
+  if (selected === "description")
+    sortedList = list
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+  if (selected === "packed")
+    sortedList = list.slice().sort((a, b) => a.packed - b.packed);
   return (
     <div className="list">
-      {list.length > 0 && (
-        <ul>
-          {list.map((item) => (
+      <ul>
+        {list.length > 0 &&
+          sortedList.map((item) => (
             <Item
               key={`${item.description}${item.id}`}
               item={item}
@@ -73,8 +110,14 @@ function PackingList({ list, setList }) {
               setList={setList}
             />
           ))}
-        </ul>
-      )}
+      </ul>
+      <div className="actions">
+        <select value={selected} onChange={(e) => setSelected(e.target.value)}>
+          <option value="input">Sort by input order</option>
+          <option value="description">Sort by description</option>
+          <option value="packed">Sort by packed status</option>
+        </select>
+      </div>
     </div>
   );
 }
