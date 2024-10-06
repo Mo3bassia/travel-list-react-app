@@ -98,6 +98,15 @@ function PackingList({ list, setList }) {
       .sort((a, b) => a.description.localeCompare(b.description));
   if (selected === "packed")
     sortedList = list.slice().sort((a, b) => a.packed - b.packed);
+
+  function handleClear() {
+    let check = window.confirm("Are you sure that you wanna remove all items?");
+    if (check) {
+      setList([]);
+    } else {
+      return;
+    }
+  }
   return (
     <div className="list">
       <ul>
@@ -117,6 +126,7 @@ function PackingList({ list, setList }) {
           <option value="description">Sort by description</option>
           <option value="packed">Sort by packed status</option>
         </select>
+        <button onClick={handleClear}>Clear List</button>
       </div>
     </div>
   );
