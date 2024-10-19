@@ -1,11 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Logo } from "./logo";
 import { Form } from "./Form";
 import { PackingList } from "./PackingList";
 import { Stats } from "./Stats";
 
 export default function App() {
-  const [list, setList] = useState([]);
+  const [list, setList] = useState(() =>
+    !localStorage.getItem("travelList")
+      ? []
+      : JSON.parse(localStorage.getItem("travelList"))
+  );
+
+  useEffect(
+    function () {
+      localStorage.setItem("travelList", JSON.stringify(list));
+    },
+    [list]
+  );
 
   return (
     <div className="app">
